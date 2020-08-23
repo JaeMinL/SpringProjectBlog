@@ -10,6 +10,12 @@
 	]]>
 	</select>
 	
+	<select id="getYMList" resultType="org.zerock.domain.AlbumVO">
+	<![CDATA[
+	SELECT to_char(taken_dt, 'YYYY Month') as YM FROM tb_album GROUP BY to_char(taken_dt, 'YYYY Month') ORDER BY to_char(taken_dt, 'YYYY Month') DESC
+	]]>
+	</select>
+	
 	<insert id="insert">
 	insert into tb_album (taken_dt)
 	values (#{taken_dt})

@@ -14,7 +14,11 @@ public interface AlbumMapper{
 
 	public AlbumVO read(Date taken_dt);
 	
+	public AlbumVO readYM(Date taken_dt);
+	
 	public int updateThumb(AlbumVO album);
 	
 	public int updateCard(AlbumVO album);
+
+	public List<AlbumVO> getYMList();
 }

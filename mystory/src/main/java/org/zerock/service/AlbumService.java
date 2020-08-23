@@ -9,6 +9,8 @@ import org.zerock.domain.PicsVO;
 public interface AlbumService{
 	public List<AlbumVO> getList();
 	
+	public List<AlbumVO> getYMList();
+	
 	public void register(AlbumVO album);
 
 	public AlbumVO read(Date taken_dt);

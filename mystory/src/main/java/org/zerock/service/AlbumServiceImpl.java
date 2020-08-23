@@ -26,6 +26,12 @@ public class AlbumServiceImpl implements AlbumService{
 		log.info("getList<Album>............");
 		return mapper.getList();
 	}
+	
+	@Override
+	public List<AlbumVO> getYMList(){
+		log.info("getYMList......");
+		return mapper.getYMList();
+	}
 
 	@Override
 	public void register(AlbumVO album) {

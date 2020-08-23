@@ -42,7 +42,7 @@ public class HomeController {
 		
 		model.addAttribute("host", host);
 		//model.addAttribute("host", "host");
-		
+		model.addAttribute("ymlist", service.getYMList());
 		model.addAttribute("list", service.getList());
 		
 		return "home";
