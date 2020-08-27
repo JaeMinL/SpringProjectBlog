@@ -26,7 +26,6 @@ import lombok.extern.log4j.Log4j;
 @Controller
 @Log4j
 @AllArgsConstructor
-//@RequestMapping("/Album/*")
 public class HomeController {
 	
 	//private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -34,7 +33,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value="/" , method = RequestMethod.GET)
 	public String home(Model model) {
 		log.info("home........");
 		
@@ -47,5 +46,5 @@ public class HomeController {
 		
 		return "home";
 	}
-	
+
 }

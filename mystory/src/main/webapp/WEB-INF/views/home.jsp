@@ -1,55 +1,74 @@
+<%@ page session="true" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%@ include file="/WEB-INF/includes/header.jsp"%>
-	
-<main id="main">     
-	<section class="section site-portfolio" style="padding:0 0 0 0;">
-		<div class="container">
-			<c:set var="tmp_dt" value="0000 ____" />
-			<c:forEach var="daypic" items="${list}" varStatus="status">
-				<fmt:formatDate pattern="yyyy MMMM" value="${daypic.taken_dt }" var="yM"/>
-					
-				<c:if test="${yM ne tmp_dt}">	
-					<c:if test="${!status.first }">
-						</div>
-					</c:if>
-					<div class="row mb-3 align-items-center">
-						<div class="col-md-12 col-lg-6 mb-5 mb-lg-0" data-aos="fade-up">
-							<h3 style="margin:8px 0 0 0"><c:out value="${yM }"/> </h3>
-						</div>
-					</div>
-					<c:set var="tmp_dt" value="${yM }"/>
-					<div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
-				</c:if>
-				
-				<div class="item col-sm-6 col-md-4 col-lg-3 mb-4 shadow-sm">
-					<a href="work-single.html" class="item-wrap fancybox">     
-						<div class="work-info">
-							<h3>+</h3>
-							<span>+</span>
-						</div>
-						
-						<div class="d-flex justify-content-start align-items-center" style="border-bottom: 0.6px solid #cbd3da">
-						<!-- <div class="btn-group">
-			                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-			                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-			                </div> -->
-							<div class="text-muted" style="font-size:20px">
-								<fmt:setLocale value="en_UK" scope="session"/>
-								<fmt:formatDate pattern="dd E" value="${daypic.taken_dt}"/>
-							</div>
-						</div>
-							      
-						<img class="img-fluid" src='${pageContext.request.contextPath}/resources/img/${daypic.thumb_fl_nm}'/>
-						<div class="card-body" style="border-top: 0.6px solid #cbd3da">
-							<p class="card-title"><cite>${daypic.title }</cite></p>
-							<p class="card-text">${daypic.text }</p>
-						</div>
-					</a>
-				</div>		
-			</c:forEach>
+<%@ include file="/WEB-INF/includes/nav.jsp"%>	
+
+				<div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100">
+					<div class="menus" class="menus" style="font-size:20pt">
+						<a href="#" >(All)</a>
+						<a href="/" class="active">Album</a>
+						<a href="#" >AMap</a>
+						<a href="/upload" >+</a>
+	            	</div>
+				</div>
 			</div>
 		</div>
-	</section>
-			
+	</header>
+
+	<main id="main">     
+		<section class="section site-portfolio" style="padding:0 0 0 0;">
+			<div class="container">
+				<c:set var="tmp_dt" value="0000 ____" />
+				<c:forEach var="daypic" items="${list}" varStatus="status">
+				<fmt:formatDate pattern="yyyy MMMM" value="${daypic.taken_dt }" var="yM"/>
+						
+				<c:if test="${yM ne tmp_dt}">
+					<c:if test="${!status.first }">
+				</div>
+					</c:if>
+				<div class="row mb-3 align-items-center">
+					<div class="col-md-12 col-lg-6 mb-5 mb-lg-0" data-aos="fade-up">
+						<h3 style="margin:8px 0 0 0"><c:out value="${yM }"/> </h3>
+					</div>
+				</div>
+						<c:set var="tmp_dt" value="${yM }"/>
+				<div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
+					</c:if>
+					
+					<div class="item col-sm-6 col-md-4 col-lg-3 mb-4 shadow-sm">
+						<a href="work-single.html" class="item-wrap fancybox">     
+							<div class="work-info">
+								<h3>+</h3>
+								<span>+</span>
+							</div>
+							
+							<div class="d-flex justify-content-start align-items-center" style="border-bottom: 0.6px solid #cbd3da">
+							<!-- <div class="btn-group">
+				                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+				                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+				                </div> -->
+								<div class="text-muted" style="font-size:20px">
+									<fmt:setLocale value="en_UK" scope="session"/>
+									<fmt:formatDate pattern="dd E" value="${daypic.taken_dt}"/>
+								</div>
+							</div>
+								      
+							<img class="img-fluid" src='${contextPath}/resources/image/${daypic.thumb_fl_nm}'/>
+							<div class="card-body" style="border-top: 0.6px solid #cbd3da">
+								<p class="card-title"><cite>${daypic.title }</cite></p>
+								<p class="card-text">${daypic.text }</p>
+							</div>
+						</a>
+					</div>		
+				</c:forEach>
+				</div>
+				
+			</div>
+		</section>
+		<p><a href="/upload">She bal</a></p>
 		
   
   <!-- End  Works Section -->
@@ -151,80 +170,37 @@
     </section>End Services Section -->
 
     <!-- ======= Testimonials Section ======= -->
-    <section class="section pt-0">
-      <div class="container">
+    
+		<section class="section pt-0">
+			<div class="container">
+				<div class="owl-carousel testimonial-carousel">	
+					<div class="testimonial-wrap">
+						<div class="testimonial">
+							<img src="${contextPath}/resources/img/person_1.jpg" alt="Image" class="img-fluid">
+							<blockquote>
+								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+								Quisquam necessitatibus incidunt ut officiis explicabo inventore.
+								</p>
+							</blockquote>
+							<p>&mdash; Jean Hicks</p>
+						</div>
+					</div>
+			
+					<div class="testimonial-wrap">
+						<div class="testimonial">
+							<img src="${contextPath}/resources/img/person_2.jpg" alt="Image" class="img-fluid">
+							<blockquote>
+								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+								Quisquam necessitatibus incidunt ut officiis explicabo inventore.
+								</p>
+							</blockquote>
+							<p>&mdash; Chris Stanworth</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section><!-- End Testimonials Section -->	
 
-        <div class="owl-carousel testimonial-carousel">
+	</main><!-- End #main -->
+<%@ include file="/WEB-INF/includes/footer.jsp"%>
 
-          <div class="testimonial-wrap">
-            <div class="testimonial">
-              <img src="${pageContext.request.contextPath}/resources/img/person_1.jpg" alt="Image" class="img-fluid">
-              <blockquote>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam necessitatibus incidunt ut officiis
-                  explicabo inventore.</p>
-              </blockquote>
-              <p>&mdash; Jean Hicks</p>
-            </div>
-          </div>
-
-          <div class="testimonial-wrap">
-            <div class="testimonial">
-              <img src="${pageContext.request.contextPath}/resources/img/person_2.jpg" alt="Image" class="img-fluid">
-              <blockquote>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam necessitatibus incidunt ut officiis
-                  explicabo inventore.</p>
-              </blockquote>
-              <p>&mdash; Chris Stanworth</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section><!-- End Testimonials Section -->
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-          <p class="mb-1">&copy; Copyright MyPortfolio. All Rights Reserved</p>
-          <div class="credits">
-            <!--
-            All the links in the footer should remain intact.
-            You can delete the links only if you purchased the pro version.
-            Licensing information: https://bootstrapmade.com/license/
-            Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=MyPortfolio
-          -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-          </div>
-        </div>
-        <div class="col-sm-6 social text-md-right">
-          <a href="#"><span class="icofont-twitter"></span></a>
-          <a href="#"><span class="icofont-facebook"></span></a>
-          <a href="#"><span class="icofont-dribbble"></span></a>
-          <a href="#"><span class="icofont-behance"></span></a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="${pageContext.request.contextPath}/resources/vendor/jquery/jquery.min.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/jquery.easing/jquery.easing.min.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/php-email-form/validate.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/aos/aos.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/vendor/owl.carousel/owl.carousel.min.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-
-</body>
-
-</html>

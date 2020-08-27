@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.zerock.domain.PicsVO;
-import org.zerock.mapper.PicsMapper;
 
 import org.zerock.domain.AlbumVO;
 import org.zerock.mapper.AlbumMapper;
