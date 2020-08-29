@@ -25,7 +25,8 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 		<multipart-config>
-			<location>/Users/jamm/tmp/image</location>
+			<location>/Users/jamm/tmp/pictures</location>
+			<!-- <location>/Users/jamm/git/SpringProjectBlog/mystory/src/main/webapp/resources/imageDB</location> -->
 			<max-file-size>20971520</max-file-size> <!-- 1MB*20 -->
 			<max-request-size>41943040</max-request-size> <!-- 40MB -->
 			<file-size-threshold>20971520</file-size-threshold> <!-- 20MB -->
@@ -36,11 +37,6 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
-	<!-- <servlet-mapping>
-		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping> -->
 	
 	<filter> 
 	    <filter-name>encodingFilter</filter-name> 

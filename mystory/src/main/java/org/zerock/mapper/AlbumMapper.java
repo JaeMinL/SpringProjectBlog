@@ -21,4 +21,6 @@ public interface AlbumMapper{
 	public int updateCard(AlbumVO album);
 
 	public List<AlbumVO> getYMList();
+	
+	public int checkThumbnail(Date taken_dt);
 }

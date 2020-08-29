@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.zerock.domain.AlbumVO;
-import org.zerock.domain.PicsVO;
 
 public interface AlbumService{
 	public List<AlbumVO> getList();
@@ -18,5 +17,7 @@ public interface AlbumService{
 	public int updateThumb(AlbumVO album);
 	
 	public int updateCard(AlbumVO album);
+	
+	public boolean isThumb(Date taken_dt);
 	
 }

@@ -58,6 +58,12 @@ public class AlbumServiceImpl implements AlbumService{
 		log.info("updateCard<Album>.......");
 		return 0;
 	}
-
+	
+	public boolean isThumb(Date taken_dt) {
+		log.info("isThumb<taken_dt>........");
+		if(mapper.checkThumbnail(taken_dt) != 0) {
+			return true;
+		}return false;
+	}
 
 }

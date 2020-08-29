@@ -21,10 +21,10 @@
 	<main id="main">     
 		<section class="section site-portfolio" style="padding:0 0 0 0;">
 			<div class="container">
+				<fmt:setLocale value="en_UK" scope="session"/>
 				<c:set var="tmp_dt" value="0000 ____" />
 				<c:forEach var="daypic" items="${list}" varStatus="status">
 				<fmt:formatDate pattern="yyyy MMMM" value="${daypic.taken_dt }" var="yM"/>
-						
 				<c:if test="${yM ne tmp_dt}">
 					<c:if test="${!status.first }">
 				</div>
@@ -51,12 +51,12 @@
 				                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
 				                </div> -->
 								<div class="text-muted" style="font-size:20px">
-									<fmt:setLocale value="en_UK" scope="session"/>
 									<fmt:formatDate pattern="dd E" value="${daypic.taken_dt}"/>
 								</div>
 							</div>
 								      
-							<img class="img-fluid" src='${contextPath}/resources/image/${daypic.thumb_fl_nm}'/>
+							<%-- <img class="img-fluid" src='pics/${daypic.thumb_fl_nm}'/> --%>
+							<img class="img-fluid" src='/pictures/${daypic.thumb_fl_nm}'/>
 							<div class="card-body" style="border-top: 0.6px solid #cbd3da">
 								<p class="card-title"><cite>${daypic.title }</cite></p>
 								<p class="card-text">${daypic.text }</p>

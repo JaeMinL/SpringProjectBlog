@@ -17,8 +17,8 @@
 	</select>
 	
 	<insert id="insert">
-	insert into tb_album (taken_dt)
-	values (#{taken_dt})
+	insert into tb_album (taken_dt, thumb_fl_nm)
+	values (#{taken_dt}, #{thumb_fl_nm})
 	</insert>
 	
 	<select id="read" resultType="org.zerock.domain.AlbumVO">
@@ -37,6 +37,12 @@
 		text = #{text}
 		where taken_dt= #{taken_dt}
 	</update>
+	
+	<select id="checkThumbnail" resultType="_int">
+	<![CDATA[
+	SELECT count(*) FROM tb_album WHERE taken_dt = #{taken_dt}
+	]]>
+	</select>
 
 	
 </mapper>

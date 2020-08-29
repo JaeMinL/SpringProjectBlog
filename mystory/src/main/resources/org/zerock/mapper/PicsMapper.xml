@@ -12,7 +12,7 @@
 	
 	<insert id="insert">
 	insert into tb_pics (taken_dt, fl_nm, gps_la, gps_lo)
-	values (#{taken_dt}, #{file_name}, #{gps_la}, #{gps_lo})
+	values (#{taken_dt}, #{fl_nm}, #{gps_la, jdbcType=VARCHAR }, #{gps_lo, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="read" resultType="org.zerock.domain.PicsVO">
