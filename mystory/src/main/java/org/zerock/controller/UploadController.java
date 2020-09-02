@@ -144,7 +144,6 @@ public class UploadController {
             	uploadFolder.mkdirs();
             }
 			
- 
             //log.info(originalDate.toString());	
 			
 		} catch (ImageProcessingException e) {
