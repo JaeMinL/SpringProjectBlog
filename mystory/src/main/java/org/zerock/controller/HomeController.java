@@ -1,14 +1,13 @@
 package org.zerock.controller;
 
 import java.text.DateFormat;
-
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-import org.zerock.domain.AlbumVO;
 import org.zerock.service.AlbumService;
-
+import org.zerock.service.PicsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,8 @@ import lombok.extern.log4j.Log4j;
 public class HomeController {
 	
 	//private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	private AlbumService service;
+	private AlbumService albumService;
+	private PicsService picsService;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -41,8 +41,12 @@ public class HomeController {
 		
 		model.addAttribute("host", host);
 		//model.addAttribute("host", "host");
-		model.addAttribute("ymlist", service.getYMList());
-		model.addAttribute("list", service.getList());
+		model.addAttribute("ymlist", albumService.getYMList());
+		model.addAttribute("list", albumService.getList());
+		
+		HashMap<Date, Integer> cntPics = picsService.cntPics();
+
+		model.addAttribute("cntPicsHash", cntPics);
 		
 		return "home";
 	}

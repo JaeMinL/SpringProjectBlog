@@ -541,3 +541,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .upload{
 	padding: 0 15px 4rem 15px;
 }
+
+
+.uploadresult-wrap .uploadresult-list {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.uploadresult-wrap {
+  padding: 20px 20px 20px 20px;
+  background: #eceff2;
+}
+
+.testimonial-carousel .owl-dots {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+}

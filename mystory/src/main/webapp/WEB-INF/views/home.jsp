@@ -41,7 +41,7 @@
 					<div class="item col-sm-6 col-md-4 col-lg-3 mb-4 shadow-sm">
 						<a href="work-single.html" class="item-wrap fancybox">     
 							<div class="work-info">
-								<h3>+</h3>
+								<h3><c:out value='${cntPicsHash[daypic.taken_dt] }' /> +</h3>
 								<span>+</span>
 							</div>
 							
@@ -56,7 +56,9 @@
 							</div>
 								      
 							<%-- <img class="img-fluid" src='pics/${daypic.thumb_fl_nm}'/> --%>
-							<img class="img-fluid" src='/pictures/${daypic.thumb_fl_nm}'/>
+							<fmt:formatDate pattern="yyyy" value="${daypic.taken_dt }" var="year"/>
+							<fmt:formatDate pattern="M" value="${daypic.taken_dt }" var="month"/>
+							<img class="img-fluid" src='/pictures/${year }/${month }/${daypic.fl_nm}'/>
 							<div class="card-body" style="border-top: 0.6px solid #cbd3da">
 								<p class="card-title"><cite>${daypic.title }</cite></p>
 								<p class="card-text">${daypic.text }</p>

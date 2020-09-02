@@ -18,6 +18,6 @@ public interface AlbumService{
 	
 	public int updateCard(AlbumVO album);
 	
-	public boolean isThumb(Date taken_dt);
+	public boolean isDate(Date taken_dt);
 	
 }

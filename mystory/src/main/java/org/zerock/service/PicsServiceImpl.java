@@ -2,6 +2,9 @@ package org.zerock.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 import org.zerock.domain.PicsVO;
@@ -28,17 +31,28 @@ public class PicsServiceImpl implements PicsService{
 	}
 
 	@Override
-	public PicsVO get(Date taken_dt) {
-		// TODO Auto-generated method stub
+	public List<PicsVO> get(Date taken_dt) {
 		log.info("get<Pics>.......");
 		return mapper.read(taken_dt);
 	}
 
 	@Override
 	public List<PicsVO> getList() {
-		// TODO Auto-generated method stub
 		log.info("getList<Pics>.......");
 		return getList();
+	}
+	
+	public HashMap<Date, Integer> cntPics(){
+		log.info("cntPic<>......");
+		HashMap<Date, Integer> hashmap = new HashMap<Date, Integer>();
+		List<PicsVO> resultList = mapper.cntPictures();
+		
+		for(PicsVO picsVO: resultList) {
+			hashmap.put(picsVO.getTaken_dt(), picsVO.getCnt());
+			System.out.println(picsVO.getTaken_dt() +"::"+ picsVO.getCnt() );
+		}
+		
+		return hashmap;
 	}
 
 }

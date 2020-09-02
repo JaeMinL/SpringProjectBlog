@@ -5,9 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class AlbumVO{
-	private Date taken_dt;
-	private String title;
-	private String text;
+public class UploadFileDTO {
 	private String fl_nm;
+	private Date taken_dt;
 }

@@ -17,8 +17,8 @@
 	</select>
 	
 	<insert id="insert">
-	insert into tb_album (taken_dt, thumb_fl_nm)
-	values (#{taken_dt}, #{thumb_fl_nm})
+	insert into tb_album (taken_dt, fl_nm)
+	values (#{taken_dt}, #{fl_nm})
 	</insert>
 	
 	<select id="read" resultType="org.zerock.domain.AlbumVO">
@@ -27,7 +27,7 @@
 	
 	<update id="updateThumb">
 		update tb_album
-		set thumb_fl_nm = #{thumb_fl_nm}
+		set fl_nm = #{fl_nm}
 		where taken_dt= #{taken_dt}
 	</update>
 	
@@ -38,7 +38,7 @@
 		where taken_dt= #{taken_dt}
 	</update>
 	
-	<select id="checkThumbnail" resultType="_int">
+	<select id="checkDate" resultType="_int">
 	<![CDATA[
 	SELECT count(*) FROM tb_album WHERE taken_dt = #{taken_dt}
 	]]>

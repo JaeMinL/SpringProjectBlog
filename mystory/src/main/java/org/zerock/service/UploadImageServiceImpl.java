@@ -3,12 +3,16 @@ package org.zerock.service;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +31,7 @@ import com.drew.metadata.exif.GpsDirectory;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 
 @Log4j
@@ -35,44 +40,42 @@ import lombok.extern.log4j.Log4j;
 public class UploadImageServiceImpl implements UploadImageService{
 	private PicsService picsService;
 	private AlbumService albumService;
+
 	
-	public File toJpeg(MultipartFile multipartFile, String uploadPath) {
+	public File toJpeg(MultipartFile multipartFile, String uploadPath, File tmpOriginFile) {
 		log.info("Image Type Check.........");
 		
 		String filename = multipartFile.getOriginalFilename();
 		File imageFile;
+		
+		//to make unique file name
+		UUID uuid = UUID.randomUUID();
 		
 		int pos = filename.lastIndexOf(".");
 		String OnlyImageName = pos > 0 ? filename.substring(0, pos) : filename;
 
 		try {
 			if(multipartFile.getContentType().toLowerCase().contains("jpeg")){
-				imageFile = new File(uploadPath, filename);
+				imageFile = new File(uploadPath, uuid.toString() + "_" + filename);
 				return imageFile;
 			}
 			else if (multipartFile.getContentType().toLowerCase().contains("jpg")) { //Convert Image jpg to JPEG
-				imageFile =  new File(uploadPath, OnlyImageName+".jpeg");
+				imageFile =  new File(uploadPath, uuid.toString() + "_" + OnlyImageName+".jpeg");
 				return imageFile;
 			}
 			else {					//Convert Image PNG to JPEG
 				BufferedImage bufferedImage;
-				File inputFile;
 				
-				inputFile = new File(uploadPath, filename);
-				
-				multipartFile.transferTo(inputFile);
-				
-				bufferedImage = ImageIO.read(inputFile);
+				bufferedImage = ImageIO.read(tmpOriginFile);
 	
 				BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), 
 						bufferedImage.getHeight(), 
 						BufferedImage.TYPE_INT_RGB);
 				newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
-				imageFile = new File(uploadPath, OnlyImageName +".jpeg");
+				
+				imageFile = new File(uploadPath, uuid.toString() + "_" + OnlyImageName +".jpeg");
 				
 				ImageIO.write(newBufferedImage, "jpeg", imageFile);
-				
-				inputFile.delete();
 				
 				return imageFile;
 			}// else end
@@ -89,30 +92,45 @@ public class UploadImageServiceImpl implements UploadImageService{
 		PicsVO picsVO = new PicsVO();
 		AlbumVO  albumVO = new AlbumVO();
 		
+		
 		log.info("Insert In DB.......");
 		Double gpsLA = null;
 		Double gpsLO = null;
-		
-		Calendar calendar = new GregorianCalendar();
-		TimeZone timeZone = calendar.getTimeZone();
+		Date taken_dt = null;
 		
 		try {
         	Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
+       
+            ExifSubIFDDirectory e = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             
-            //Taken_dt "YYYY-MM-DD"
-            Directory date_directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-            Date originalDate = date_directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, timeZone);
-            log.info("Upload Image Taken Date//: " + originalDate.toString()); // Sun Aug 16 12:23:04 KST 2020
-            
-//            SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
-//            log.info("Upload Image Taken Date: " + fm.format(originalDate)); //2020-08-16
-//            Date taken_dt = fm.parse(fm.format(originalDate));
-//            log.info("Upload Image Taken Date: " + taken_dt); //Sun Aug 16 00:00:00 KST 2020
+            if (e != null){
+            	//set taken_dt
+	            taken_dt = e.getDateOriginal();
+	            Calendar cal = Calendar.getInstance();  
+	            cal.setTime(taken_dt);  
+	            cal.set(Calendar.HOUR_OF_DAY, 0);  
+	            cal.set(Calendar.MINUTE, 0);  
+	            cal.set(Calendar.SECOND, 0);  
+	            cal.set(Calendar.MILLISECOND, 0);
+	            taken_dt = cal.getTime();
+	            picsVO.setTaken_dt(taken_dt);
+	            albumVO.setTaken_dt(taken_dt);
+	            //System.out.println("Upload Image Taken Date: " + taken_dt);
+	            
+	            System.out.println("Upload Image Taken Date: " + taken_dt); //Sun Aug 16 00:00:00 KST 2020
+	          
+	            }else { //maybe screenshot :  no meta data of SubIFDDirectory
+	            ;}
+
             
 //            ExifThumbnailDirectory thumb_directory = metadata.getFirstDirectoryOfType(ExifThumbnailDirectory.class);
 //            System.out.println(thumb_directory.getName());
-            
-            //Double gps_la, gps_lo 
+            //섬네일 처리???
+            FileOutputStream thumbnail = new FileOutputStream(new File(imageFile.getParent(), "s_"+imageFile.getName()));
+            Thumbnailator.createThumbnail(ImageIO.read(imageFile), 100, 100);
+            thumbnail.close();
+           
+            //set Double gps_la, gps_lo 
             Collection <GpsDirectory> gpsDirectories = metadata.getDirectoriesOfType(GpsDirectory.class);
             for (GpsDirectory gpsDirectory : gpsDirectories) {
             	GeoLocation geoLocation = gpsDirectory.getGeoLocation();
@@ -120,38 +138,32 @@ public class UploadImageServiceImpl implements UploadImageService{
             	if(geoLocation != null && !geoLocation.isZero()) {
             		gpsLA = geoLocation.getLatitude();
             		gpsLO = geoLocation.getLongitude();
+            		picsVO.setGps_la(gpsLA);
+                    picsVO.setGps_lo(gpsLO);
             		log.info("Upload Image GPS: " + gpsLA + ", " + gpsLO);
             	} else {log.info("Upload Image GPS is null ");}
             }
-            
-            // Make object of PicsVO
-            picsVO.setTaken_dt(originalDate);
             picsVO.setFl_nm(imageFile.getName());
-            picsVO.setGps_la(gpsLA);
-            picsVO.setGps_lo(gpsLO);
+            	
+        	// Make object of PicsVO
             picsService.register(picsVO);
-            
+                
             //Make object of AlbumVO
-            //섬네일 처리???
-            System.out.print("dmdmmdmmdmdmmd  "+albumService.isThumb(originalDate));
-            if(!albumService.isThumb(originalDate)) {
-            	albumVO.setTaken_dt(originalDate);
-            	albumVO.setThumb_fl_nm(imageFile.getName());
+            if(taken_dt != null && !albumService.isDate(taken_dt)) {
+            	albumVO.setFl_nm(imageFile.getName());
             	albumService.register(albumVO);
             }
-            //set title & text??
-            //
-            //
-            //
             
+            //return originalDate;
             return true;
-            
         } catch (ImageProcessingException e) {
         	log.error(e.getMessage());
+        	//return null;
+        	return false;
         } catch (IOException e) {
         	log.error(e.getMessage());
+        	//return null;
+        	return false;
         } 
-		
-		return false;
 	}
 }

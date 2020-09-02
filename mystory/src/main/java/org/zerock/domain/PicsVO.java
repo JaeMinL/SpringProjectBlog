@@ -11,4 +11,6 @@ public class PicsVO{
 	private Date reg_dt;
 	private Double gps_la;
 	private Double gps_lo;
+	
+	private int cnt;
 }

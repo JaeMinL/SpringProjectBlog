@@ -26,10 +26,11 @@
 				       <input type="text" name="src" /> </br>
 				       <input type="submit" value="전송" /> 
 				   	</form> -->
-				   	<div class="upload">
-				   		<input type='file' name='uploadImage' accept="image/*" multiple>
+				   	<div class="uploadDiv">
+				   		<input type="file" name="uploadImage" accept="image/*" multiple>
 				   	</div>
-				   	<button id='uploadBtn'>Upload</button>
+				   	
+				   	<button id="uploadBtn">Upload</button>
 				   	
 				   	<script
 				   		src="http://code.jquery.com/jquery-3.3.1.min.js"
@@ -38,38 +39,63 @@
 				   	</script>
 				   	
 				   	<script>
-				   	$(document).ready(function(){
+				   	var regex = new RegExp("(.*?)\.(exe|sh|zip|alz$)");
+				   	var maxSize = 5242880;
+				   	
+				   	function checkExtension(fileName, fileSize){
 				   		
-				   		$("#uploadBtn").on("click", function(e){
-				   			var formData = new FormData();
-				   			var inputImage = $("input[name='uploadImage']");
-				   			var images = inputImage[0].files;
-				   			
-				   			console.log(images);
-				   			
-				   			for (var i=0; i< images.length; i++){
-				   				formData.append("uploadImage", images[i]);
-				   				
-				   			}
-				   			
-				   			
-				   			$.ajax({
-				   				url: '/uploadAction',
-				   					processData: false,
-				   					contentType: false,
-				   					data: formData,
-				   					type: 'POST',
-				   					enctype: 'multipart/form-data',
-				   					success: function(result){
-				   						alert("Uploaded");
-				   					}
-				   			}); //$.ajax
-				   		});
-				   	});
+				   		if(fileSize >= maxSize){
+				   			alert("파일 사이즈 초과 ");
+				   			return false;
+				   		}
+				   		if(regex.test(fileName)){
+				   			alert("해당 종류의 파일은 업로드할 수 없습니다.");
+				   			return false;
+				   		}
+				   		return true;
+				   	};
+				   	
+			   		$("#uploadBtn").on("click", function(e){
+			   			var formData = new FormData();
+			   			var inputImage = $("input[name = 'uploadImage' ]");
+			   			var images = inputImage[0].files;
+			   			
+			   			console.log(images);
+			   			
+			   			for (var i=0; i< images.length; i++){
+			   				if(!checkExtension(images[i].name, images[i].size) ){
+			   					return false;
+			   				}
+			   				
+			   				formData.append("uploadImage", images[i]);
+			   			}
+			   			
+			   			$.ajax({
+			   				url: '/uploadAction',
+			   					processData: false,
+			   					contentType: false,
+			   					data: formData,
+			   					type: 'POST',
+			   					success: function(result){
+			   						alert("Uploaded");
+			   					}
+			   			}); //$.ajax
+			   		});
 				   	</script>
 				</div>	
 			</div>
 		</section>
+		
+		<section class="section pt-0">
+			<div class="container">
+				<div class="uploadresult-wrap">
+					<ul class="uploadresult-list">
+							<li>Test</li>
+							
+					</ul>
+				</div>
+			</div>
+		</section> <!-- .uploadresult end-->
 	</main><!-- End #main -->
   
 <%@ include file="/WEB-INF/includes/footer.jsp"%>

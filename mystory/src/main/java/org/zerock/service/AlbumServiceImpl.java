@@ -59,9 +59,10 @@ public class AlbumServiceImpl implements AlbumService{
 		return 0;
 	}
 	
-	public boolean isThumb(Date taken_dt) {
-		log.info("isThumb<taken_dt>........");
-		if(mapper.checkThumbnail(taken_dt) != 0) {
+	public boolean isDate(Date taken_dt) {
+		log.info("isDate<taken_dt>........");
+		if(taken_dt == null) return false;
+		if(mapper.checkDate(taken_dt) != 0) {
 			return true;
 		}return false;
 	}
