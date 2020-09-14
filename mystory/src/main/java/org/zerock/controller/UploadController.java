@@ -1,17 +1,19 @@
 package org.zerock.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,11 +29,8 @@ import org.zerock.service.UploadImageService;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.jpeg.JpegDirectory;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -43,36 +42,37 @@ public class UploadController {
 	
 	private UploadImageService uploadImageService;
 	
+	private static String basePath = "/Users/jamm/tmp/pictures";
+	
 	@GetMapping("/upload")
 	public void upload(Model model) {
 		
 		log.info("upload page......");
 	}
 	
-	@PostMapping("/uploadAction")
-	public void uploadAjaxPost(MultipartFile[] uploadImage) {
+	@PostMapping(value = "/uploadAction", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<UploadFileDTO>> uploadAjaxPost(MultipartFile[] uploadImage) {
 		log.info("update ajax post.......");
 		
-		//List<UploadFileDTO> list = new ArrayList<>();
-		 
-		String uploadPath = "/Users/jamm/tmp/pictures";
+		List<UploadFileDTO> list = new ArrayList<>();
 		
 		for(MultipartFile multipartFile : uploadImage) {
 			log.info("--------------------------------------------------");
 			log.info("Upload Image Name: " + multipartFile.getOriginalFilename());
 			log.info("Upload Image Size: " + multipartFile.getSize());
  			
-			//UploadFileDTO dto = new UploadFileDTO();
+			UploadFileDTO uploadFileDTO = new UploadFileDTO();
 			
 			File saveFile;
 			//make folder
-			File tmp = new File(uploadPath, multipartFile.getOriginalFilename());
+			File tmp = new File(basePath, multipartFile.getOriginalFilename());
 			
 			try{
 				multipartFile.transferTo(tmp);
 				
 				//make folder
-				uploadPath = getFolder(uploadPath, tmp);
+				String uploadPath = getFolder(tmp);
 				log.info("upload file to "+ uploadPath + "/.........");
 				
 				//convert type to JPEG
@@ -84,14 +84,14 @@ public class UploadController {
 				
 				
 				//Date date = uploadImageService.insertdb(saveFile);
-				uploadImageService.insertdb(saveFile);
+				Date taken_dt = uploadImageService.insertdb(saveFile);
 				log.info("Insert Data in DB Successfully.......");
 				
-			
-//				dto.setFl_nm(multipartFile.getOriginalFilename());
-//				dto.setTaken_dt(date);
-//				list.add(dto);
-
+				uploadFileDTO.setFl_nm(saveFile.getName());
+				if(taken_dt != null) uploadFileDTO.setTaken_dt(taken_dt);
+//				System.out.println(uploadFileDTO.getTaken_dt().toString());
+				list.add(uploadFileDTO);
+				
 				// 메타데이터 출력 
 //				for(Directory dir: metadata.getDirectories()) {
 //					for(Tag tag : dir.getTags()) {
@@ -108,17 +108,18 @@ public class UploadController {
 //					}
 //				}
 				
+				
 				tmp.delete();
 			} catch(Exception e) {
 				tmp.delete();
 				log.error(e.getMessage());
 			}//end catch
 		} //end for
-		//return new ResponseEntity<>(list, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-	private String getFolder(String path, File saveFile) {
-		String uploadPath = path;
+	private String getFolder(File saveFile) {
+		String uploadPath = basePath;
 		File uploadFolder;
 		
 		try {
@@ -126,17 +127,10 @@ public class UploadController {
 			
 			ExifSubIFDDirectory e = null;
 			if( (e = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class)) != null){
-				Calendar cal = new GregorianCalendar();
-	            Date originalDate = e.getDateOriginal();
-	            cal.setTime(originalDate);
-	            
-	            int year = cal.get(Calendar.YEAR);
-	            int month = cal.get(Calendar.MONTH)+1;
-	            uploadPath = uploadPath + "/" + year + "/" + month;
+				uploadPath = getSavePath(e.getDateOriginal());
 			}
 			else { //maybe screenshot
-				uploadPath =uploadPath + "/etc";
-				System.out.println("uploadPath/etc ?????: "+ uploadPath );
+				uploadPath = basePath + "/etc";
 			}
 			//디렉토리 생성 
             uploadFolder = new File(uploadPath);
@@ -153,7 +147,70 @@ public class UploadController {
 		}
 		
 		return uploadPath;
+	}
+
+	private String getSavePath(Date date) {
+		Calendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
 		
+		return basePath + "/" + year + "/" + month;
 	}
 	
+	private String thumbnailPath(String path){
+		return "s_"+ path;
+	}
+	
+	@PostMapping("/updateAction")
+	@ResponseBody
+	public ResponseEntity<String> updateDate(String newTakenDt, String thumbnailPath) {
+		log.info("UpdateAction.........");
+		String destPath;
+		File updatePath; 
+		Date taken_dt;
+		//System.out.println(imgPath);
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			taken_dt = fmt.parse(newTakenDt);
+			destPath = getSavePath(taken_dt);
+			//목적지 폴더 생성해서 옮기기
+			updatePath = new File(destPath);
+	        if(updatePath.exists() == false) {
+	        	updatePath.mkdirs();
+	        }
+			
+			File from_thumb = new File("/Users/jamm/tmp/"+thumbnailPath);
+			String originImg = from_thumb.getPath().replace("s_", "");
+			File from_origin = new File(originImg);
+	        
+	        System.out.println(thumbnailPath+"------------------------");
+			
+	        File to_origin = new File(destPath +"/"+ from_origin.getName());
+	        File to_thumb = new File(destPath +"/"+ from_thumb.getName());
+	        
+	        System.out.println(from_origin.getPath() +"---->"+ to_origin.getPath());
+	        System.out.println(from_thumb.getPath() +"---->"+ to_thumb.getPath());
+	        
+	        java.nio.file.Files.move(from_origin.toPath(), to_origin.toPath());
+	        java.nio.file.Files.move(from_thumb.toPath(), to_thumb.toPath());
+
+	        uploadImageService.updatedb(to_origin, taken_dt);
+	        
+	        from_origin.delete();
+	        from_thumb.delete();
+			
+		} catch (ParseException e) {log.info(e.getMessage()); 
+		} catch (IOException e) {log.info(e.getMessage());
+		}
+
+		
+		//원본 삭제 섬네일도!!! 
+		//db수
+		return new ResponseEntity<String>("Updated", HttpStatus.OK);
+	}	
+	
+
+
 }
