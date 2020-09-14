@@ -20,7 +20,7 @@
 	<main id="main">     
 		<section class="section site-portfolio" style="padding:0 0 0 0;">
 			<div class="container">
-				<div class="row align-items-center">
+				<div class="row align-items-center" style="margin:8px 8px 10px 8px">
 					<!-- <form class="fileform" name="fileForm" action="requestupload2" method="post" enctype="multipart/form-data" data-aos="fade-up">
 				       <input multiple="multiple" type="file" name="file" /> </br>
 				       <input type="text" name="src" /> </br>
@@ -39,6 +39,7 @@
 				   	</script>
 				   	
 				   	<script>
+				   	var formData = new FormData();
 				   	var regex = new RegExp("(.*?)\.(exe|sh|zip|alz$)");
 				   	var maxSize = 5242880;
 				   	
@@ -55,8 +56,16 @@
 				   		return true;
 				   	};
 				   	
+				   	function fillZero(num){
+				   		if (num<10){
+				   			return "0"+num;
+				   		}
+				   		else return num;
+				   	}
+				   	
+				   	var cloneObj = $(".uploadDiv").clone();
+				   	
 			   		$("#uploadBtn").on("click", function(e){
-			   			var formData = new FormData();
 			   			var inputImage = $("input[name = 'uploadImage' ]");
 			   			var images = inputImage[0].files;
 			   			
@@ -76,22 +85,107 @@
 			   					contentType: false,
 			   					data: formData,
 			   					type: 'POST',
+			   					dataType:'json',
 			   					success: function(result){
 			   						alert("Uploaded");
+			   						formData = new FormData();
+			   						console.log(result);
+			   						$(".uploadDiv").html(cloneObj.html());
+			   						
+			   						for(var i=0; i<result.length; i++){
+			   							var date = null;
+			   							var str = "";
+			   							if(result[i].taken_dt){
+			   								var tk_dt = new Date(result[i].taken_dt);
+			   								var year = tk_dt.getFullYear();
+			   								var month = tk_dt.getMonth() + 1;
+			   								var path = "/pictures/"+ year +"/"+ month + "/s_"+result[i].fl_nm;
+			   								date = year + "-" + fillZero(month) +"-"+ fillZero(tk_dt.getDate());
+			   								
+			   								str += "<li> <div>";
+			   								str += "<img class=img_thumbnail src='" + path + "' </img>  :  ";
+			   								str += "<div name='calendarDiv'>" + "<input type='date' name='chosenDate' value='" + date + "'/>";
+			   								str += "<button type='button' id='updateBtn'>Update</button>";
+			   								str += "</div> </li>";
+			   								
+			   							}else {
+			   								var path = "/pictures/etc/s_" + result[i].fl_nm;
+			   								
+			   								str += "<li> <div>" ;
+			   								str += "<img class=img_thumbnail src='" + path + "' </img>  :  ";
+			   								str += "<div name='calendarDiv'>"+"<input type='date' name='chosenDate' />";
+			   								str += "<button type='button' id='updateBtn'>Update</button>";
+			   								str += "</div> </li>";
+			   							}
+			   							
+			   							$(".uploadResult-list").append(str);
+			   							
+			   							$(".uploadResult-wrap").off('click').on("click", "button", function() {
+			   								var newDate = $(this).prev().val();
+			   								var imgPath =  $(this).parent().prev().attr("src");
+			   								if(!newDate){
+			   									alert("날짜를 선택해주세요.");
+			   									return false;
+			   								}
+			   								//var updateData = {"newDate" : newDate, "imgPath" : imgPath};
+			   								
+			   								//alert( $(this).parent().children("img").attr("src") );
+			   								//console.log(newDate.getFullYear +"-"+ newDate.getMonth() + " : "+ imgPath);
+			   					   			$.ajax({
+			   					   				url: '/updateAction',
+			   					   					processData: true,
+			   					   					dataType: 'text',
+			   					   					data: {newTakenDt : newDate, thumbnailPath : imgPath},
+			   					   					type: 'POST',
+			   					   					success: function(result){
+			   					   						alert(result);
+			   					   						//console.log(updateData);
+			   					   					}
+			   					   			});  //$.ajax
+			   				   			});
+			   							
+			   							/* var isRun = false;
+			   							$(#uploadResult-wrap).on("click", "#updateBtn", function() {
+			   								if(isRun == true) return;
+			   								var newDate = $(this).prev().children().val();
+			   								var imgPath =  $(this).parent().children("img").attr("src");
+			   								if(!newDate){
+			   									alert("날짜를 선택해주세요.");
+			   									return false;
+			   								}
+			   								var updateData = {"newDate" : newDate, "imgPath" : imgPath};
+			   								
+			   								//alert( $(this).parent().children("img").attr("src") );
+			   								//console.log(newDate.getFullYear +"-"+ newDate.getMonth() + " : "+ imgPath);
+			   					   			$.ajax({
+			   					   				url: '/updateAction',
+			   					   					processData: true,
+			   					   					dataType: 'text',
+			   					   					data: {newTakenDt : newDate, filePath : imgPath},
+			   					   					type: 'POST',
+			   					   					success: function(result){
+			   					   						alert("Updated");
+			   					   						isRun = true;
+			   					   						console.log(updateData);
+			   					   					}
+			   					   			});  //$.ajax
+			   				   			}); */
+			   			
+			   						}
 			   					}
 			   			}); //$.ajax
 			   		});
-				   	</script>
+			   		
+			   	</script>
 				</div>	
 			</div>
 		</section>
 		
 		<section class="section pt-0">
 			<div class="container">
-				<div class="uploadresult-wrap">
-					<ul class="uploadresult-list">
-							<li>Test</li>
-							
+				<div class="uploadResult-wrap">
+					<ul class="uploadResult-list">
+					
 					</ul>
 				</div>
 			</div>

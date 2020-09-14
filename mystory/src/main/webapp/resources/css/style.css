@@ -543,18 +543,125 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 
-.uploadresult-wrap .uploadresult-list {
+.uploadResult-wrap .uploadResult-list {
   max-width: 500px;
   margin: 0 auto;
+  display: inline-block;
+  /* position: absolute; */
 }
 
-.uploadresult-wrap {
+.uploadResult-wrap {
   padding: 20px 20px 20px 20px;
   background: #eceff2;
+}
+.uploadResult-wrap .uploadResult-list li div{
+	display: inline-block;
 }
 
 .testimonial-carousel .owl-dots {
   position: absolute;
   bottom: 40px;
   width: 100%;
+}
+
+/*--------------------------------------------------------------
+#Daily Pictures
+--------------------------------------------------------------*/
+#daily-pictures {
+  text-align: center;
+  max-width: 70%;
+  margin: 0 auto;
+  padding: 0;
+}
+.date-head{
+	text-align: left;
+}
+.picture-grid{
+	display: table;
+	width:100%;
+}
+.picture-grid .main-thumbnail{
+	display: table-cell;
+	width: 70%;
+	border-bottom: 0.6px solid #cbd3da;
+	border-top: 0.6px solid #cbd3da;
+}
+.picture-grid .main-thumbnail img{
+	height:auto; 
+	width:auto; 
+	max-height:550px
+}
+.picture-grid .content-grid{
+	display: table-cell;
+	vertical-align: top;
+	width: 30%;
+}
+
+.content-grid .content-item *{
+	text-align: left;
+}
+
+.content-grid .updateBtnDiv{
+	text-align: right;
+	position: absolute;
+	bottom: 1px;
+	right: 0;
+} 
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 2px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 10px;
+  user-select: none;
+}
+.prev{
+	left: 0;
+}
+.next{
+	right: 0;
+}
+.prev:hover, .next:hover {
+  background-color: #cbd3da;
+}
+
+/* 이미지 리스트  */
+.pictures-list-grid{
+	padding : 8px;
+}
+.pictures-list-grid .pictures-list{
+	padding: 0 7px;
+	margin-bottom : 2px;
+}
+.input-image-wrap{
+	width: 100px; height:100px;
+}
+
+input:focus{
+	outline:none;
+}
+
+.pictures-list-grid .pictures-list .input-image-wrap input{
+	width: 100px; height:100px;
+	object-fit: cover;
+	align-items: center;
+	justify-content: center;
+}
+.pictures-list-grid .pictures-list:hover input {
+	transform: scale(1.08);
+	border: 2px solid forestgreen;
+	border-radius: 5px;
+}
+
+#chosen-image{
+	border: 2px solid forestgreen;
+	border-radius: 5px;
 }
