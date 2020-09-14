@@ -3,15 +3,13 @@ package org.zerock.service;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -24,7 +22,6 @@ import org.zerock.domain.PicsVO;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
@@ -41,6 +38,8 @@ public class UploadImageServiceImpl implements UploadImageService{
 	private PicsService picsService;
 	private AlbumService albumService;
 
+	private static int thumb_w = 100;
+	private static int thumb_h = 100;
 	
 	public File toJpeg(MultipartFile multipartFile, String uploadPath, File tmpOriginFile) {
 		log.info("Image Type Check.........");
@@ -74,7 +73,7 @@ public class UploadImageServiceImpl implements UploadImageService{
 				newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
 				
 				imageFile = new File(uploadPath, uuid.toString() + "_" + OnlyImageName +".jpeg");
-				
+			
 				ImageIO.write(newBufferedImage, "jpeg", imageFile);
 				
 				return imageFile;
@@ -88,7 +87,7 @@ public class UploadImageServiceImpl implements UploadImageService{
 		}
 	}
 	
-	public boolean insertdb(File imageFile){
+	public Date insertdb(File imageFile){
 		PicsVO picsVO = new PicsVO();
 		AlbumVO  albumVO = new AlbumVO();
 		
@@ -126,8 +125,9 @@ public class UploadImageServiceImpl implements UploadImageService{
 //            ExifThumbnailDirectory thumb_directory = metadata.getFirstDirectoryOfType(ExifThumbnailDirectory.class);
 //            System.out.println(thumb_directory.getName());
             //섬네일 처리???
+            
             FileOutputStream thumbnail = new FileOutputStream(new File(imageFile.getParent(), "s_"+imageFile.getName()));
-            Thumbnailator.createThumbnail(ImageIO.read(imageFile), 100, 100);
+            Thumbnailator.createThumbnail((InputStream)new FileInputStream(imageFile.getAbsolutePath()), thumbnail, thumb_w, thumb_h);
             thumbnail.close();
            
             //set Double gps_la, gps_lo 
@@ -154,16 +154,32 @@ public class UploadImageServiceImpl implements UploadImageService{
             	albumService.register(albumVO);
             }
             
-            //return originalDate;
-            return true;
+            return taken_dt;
         } catch (ImageProcessingException e) {
         	log.error(e.getMessage());
         	//return null;
-        	return false;
+        	return null;
         } catch (IOException e) {
         	log.error(e.getMessage());
         	//return null;
-        	return false;
+        	return null;
         } 
+	}
+	
+	public void updatedb(File newImg, Date taken_dt) {
+		//pics에 파일 ㅣ읆으로 찾아서 업데이트
+		PicsVO newPics = new PicsVO();
+		newPics.setFl_nm(newImg.getName());
+		newPics.setTaken_dt(taken_dt);
+		
+		picsService.updatePics(newPics);
+		
+		//album에 해당 날짜 존재하는지 확인 없ㅇ면 추가 
+		if(!albumService.isDate(taken_dt)) { //add new AlbumVO
+			AlbumVO newAlbum = new AlbumVO();
+			newAlbum.setFl_nm(newImg.getName());
+			newAlbum.setTaken_dt(taken_dt);
+			albumService.register(newAlbum);
+		}
 	}
 }
