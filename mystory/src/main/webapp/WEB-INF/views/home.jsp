@@ -17,8 +17,35 @@
 			</div>
 		</div>
 	</header>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script>
+		function dailyFunction(date){
+			$.ajax({
+				type: "GET",
+				url: "/daily",
+				data: {date : date},
+				/* dataType: "json", */
+				/* dataType: "script", */
+				success: function(result){
+					/* $("#data_table").append(result); */
+					console.log(result);
+					/* alert(result); */
+					$("section").remove();
+					$("#data_table").load("daily?date="+date);
+					
+					
+				}
+				
+			});
+		}
+	
+	</script>
 
-	<main id="main">     
+	<main id="main"> 
+	<div id="data_table">
+	
+	</div>
 		<section class="section site-portfolio" style="padding:0 0 0 0;">
 			<div class="container">
 				<fmt:setLocale value="en_UK" scope="session"/>
@@ -38,11 +65,13 @@
 				<div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
 					</c:if>
 					
-					<div class="item col-sm-6 col-md-4 col-lg-3 mb-4 shadow-sm">
-						<a href="work-single.html" class="item-wrap fancybox">     
+					<div class="item col-sm-4 col-md-3 col-lg-3 mb-4 shadow-sm">
+						<fmt:formatDate pattern="yyMMdd" value="${daypic.taken_dt }" var="date_id"/>
+						<%-- <div class="day-by-day item-wrap fancybox" value="${date_id }" onclick="dailyFunction(${date_id})"> --%>
+						<a href="javascript:dailyFunction(${date_id }) " value='${date_id}' class="item-wrap fancybox">
+						<%-- <a href="#" value='${date_id }' class="item-wrap fancybox">  --%>   
 							<div class="work-info">
 								<h3><c:out value='${cntPicsHash[daypic.taken_dt] }' /> +</h3>
-								<span>+</span>
 							</div>
 							
 							<div class="d-flex justify-content-start align-items-center" style="border-bottom: 0.6px solid #cbd3da">
@@ -64,13 +93,13 @@
 								<p class="card-text">${daypic.text }</p>
 							</div>
 						</a>
+						<!-- </div> -->
 					</div>		
 				</c:forEach>
 				</div>
 				
 			</div>
 		</section>
-		<p><a href="/upload">She bal</a></p>
 		
   
   <!-- End  Works Section -->

@@ -32,14 +32,19 @@ public class PicsServiceImpl implements PicsService{
 
 	@Override
 	public List<PicsVO> get(Date taken_dt) {
-		log.info("get<Pics>.......");
-		return mapper.read(taken_dt);
+		log.info("get<Pics_taken_dt>.......");
+		return mapper.readByDt(taken_dt);
 	}
-
 	@Override
-	public List<PicsVO> getList() {
+	public PicsVO get(String fl_nm) {
+		log.info("get<Pics_fl_nm>");
+		return mapper.readByNm(fl_nm);
+	}
+	
+	@Override
+	public List<PicsVO> getAll() {
 		log.info("getList<Pics>.......");
-		return getList();
+		return mapper.getList();
 	}
 	
 	public HashMap<Date, Integer> cntPics(){
@@ -54,5 +59,9 @@ public class PicsServiceImpl implements PicsService{
 		
 		return hashmap;
 	}
-
+	
+	public void updatePics(PicsVO pic) {
+		log.info("updateDate .......");
+		mapper.updateDate(pic);
+	}
 }

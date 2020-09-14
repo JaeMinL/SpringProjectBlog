@@ -15,12 +15,20 @@
 	values (#{taken_dt, jdbcType=DATE}, #{fl_nm}, #{gps_la, jdbcType=VARCHAR }, #{gps_lo, jdbcType=VARCHAR})
 	</insert>
 	
-	<select id="read" resultType="org.zerock.domain.PicsVO">
-		select * from tb_pics where taken_dt = #{taken_dt} <!-- PicsVO = mapper.read(2020-08-18) -->
+	<select id="readByDt" resultType="org.zerock.domain.PicsVO">
+		select * from tb_pics where taken_dt = #{taken_dt} 
+	</select>
+	
+	<select id="readByNm" resultType="org.zerock.domain.PicsVO">
+		select * from tb_pics where fl_nm = #{fl_nm}
 	</select>
 	
 	<select id="cntPictures" resultType="org.zerock.domain.PicsVO">
 		select taken_dt, count(*) as cnt from tb_pics group by taken_dt
 	</select>
+	
+	<update id="updateDate">
+		update tb_pics set taken_dt = #{taken_dt} where fl_nm = #{fl_nm}
+	</update>
 	
 </mapper>

@@ -12,8 +12,12 @@ public interface PicsService{
 	
 	public List<PicsVO> get(Date taken_dt);
 	
-	public List<PicsVO> getList();
+	public List<PicsVO> getAll();
 	
 	public HashMap<Date, Integer> cntPics();
+	
+	public void updatePics(PicsVO pic);
+
+	public PicsVO get(String fl_nm);
 	
 }

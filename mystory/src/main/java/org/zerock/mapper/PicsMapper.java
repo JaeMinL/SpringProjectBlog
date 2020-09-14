@@ -2,7 +2,6 @@ package org.zerock.mapper;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.zerock.domain.PicsVO;
 
@@ -12,8 +11,12 @@ public interface PicsMapper{
 	
 	public void insert(PicsVO pic);
 
-	public List<PicsVO> read(Date taken_dt);
+	public List<PicsVO> readByDt(Date taken_dt);
+	
+	public PicsVO readByNm(String fl_nm);
 	
 	public List<PicsVO> cntPictures();
+	
+	public void updateDate(PicsVO pics);
 	
 }
