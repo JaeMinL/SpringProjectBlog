@@ -4,13 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="/WEB-INF/includes/header.jsp"%>
-<%@ include file="/WEB-INF/includes/nav.jsp"%>	
-
-				<div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100">
+<%@ include file="/WEB-INF/includes/nav.jsp"%>
+	
+	<!-- <div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100"> -->
+				<div class="col-md-12 col-lg-6 text-left text-lg-right">
 					<div class="menus" class="menus" style="font-size:20pt">
 						<a href="#" >(All)</a>
 						<a href="/" class="active">Album</a>
-						<a href="#" >AMap</a>
+						<a href="/amap" >AMap</a>
 						<a href="/upload" >+</a>
 	            	</div>
 				</div>
@@ -19,7 +20,7 @@
 	</header>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script>
+	<!-- <script>
 		function dailyFunction(date){
 			$.ajax({
 				type: "GET",
@@ -28,24 +29,21 @@
 				/* dataType: "json", */
 				/* dataType: "script", */
 				success: function(result){
-					/* $("#data_table").append(result); */
 					console.log(result);
-					/* alert(result); */
 					$("section").remove();
 					$("#data_table").load("daily?date="+date);
-					
-					
+					/* history.pushState(null, null, "?date="+date); */
 				}
 				
 			});
 		}
 	
-	</script>
+	</script> -->
 
 	<main id="main"> 
-	<div id="data_table">
-	
-	</div>
+		<div id="data_table">
+		
+		</div>
 		<section class="section site-portfolio" style="padding:0 0 0 0;">
 			<div class="container">
 				<fmt:setLocale value="en_UK" scope="session"/>
@@ -67,9 +65,8 @@
 					
 					<div class="item col-sm-4 col-md-3 col-lg-3 mb-4 shadow-sm">
 						<fmt:formatDate pattern="yyMMdd" value="${daypic.taken_dt }" var="date_id"/>
-						<%-- <div class="day-by-day item-wrap fancybox" value="${date_id }" onclick="dailyFunction(${date_id})"> --%>
-						<a href="javascript:dailyFunction(${date_id }) " value='${date_id}' class="item-wrap fancybox">
-						<%-- <a href="#" value='${date_id }' class="item-wrap fancybox">  --%>   
+						<a href="daily?date=${date_id }"  value='${date_id}' class="item-wrap fancybox">
+						<%-- <a href="daily?date=${date_id }" onclick="javascript:dailyFunction(${date_id });" value='${date_id}' class="item-wrap fancybox"> --%>
 							<div class="work-info">
 								<h3><c:out value='${cntPicsHash[daypic.taken_dt] }' /> +</h3>
 							</div>

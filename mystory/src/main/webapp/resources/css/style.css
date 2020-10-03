@@ -542,12 +542,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 	padding: 0 15px 4rem 15px;
 }
 
-
 .uploadResult-wrap .uploadResult-list {
   max-width: 500px;
-  margin: 0 auto;
   display: inline-block;
+  
   /* position: absolute; */
+}
+.uploadResult-wrap .uploadResult-list li{
+	margin: 3px;
 }
 
 .uploadResult-wrap {
@@ -556,6 +558,16 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 .uploadResult-wrap .uploadResult-list li div{
 	display: inline-block;
+}
+
+.img_thumbnail_wrap{
+	width: 100px; height:100px;
+}
+.img_thumbnail_wrap img{
+	width: 100px; height:100px;
+	object-fit: cover;
+	align-items: center;
+	justify-content: center;
 }
 
 .testimonial-carousel .owl-dots {
@@ -664,4 +676,106 @@ input:focus{
 #chosen-image{
 	border: 2px solid forestgreen;
 	border-radius: 5px;
+}
+
+
+/*--------------------------------------------------------------
+#Amap
+--------------------------------------------------------------*/
+#map {
+  height: auto;
+  min-height: 500px;
+}
+.gm-style-iw{
+	/* width:76px; height: 76px;
+	padding: 3px !important; */
+	
+}
+.marker-wrap{
+	width:70px;
+	height:70px;
+	overflow: hidden;
+	border-radius : 10%;
+}
+.marker-wrap img{
+	min-width: 100%;
+	min-height: 100%;
+	width: 70px !important;
+	height: auto !important;
+	object-fit: cover;
+	align-items: center;
+	justify-content: center;
+}
+.gm-style-iw-c{
+	width:76px; height: 76px;
+	padding: 3px !important;
+	overflow: initial !important;
+}
+.gm-style-iw-d{
+	overflow: visible !important;
+}
+
+.gm-ui-hover-effect{
+	display: none !important;
+}
+
+.cluster span{
+	color: white;
+	font-size: 14px;
+}
+.cluster-img-div{
+	width: 76px;
+	height: 76px;
+	padding: 3px;
+	background: white;
+	border-radius : 10%;
+	/* align-items: center; */
+	box-shadow: 2px 2px 2px 2px rgba(178,178,178,.4);
+	box-shadow: 0 2px 7px 1px rgba(0,0,0,0.3);
+	position: relative;
+}
+
+.cluster-img-div .cluster-img-wrap{
+	wicth: 70px;
+	height: 70px;
+	overflow: hidden;
+	border-radius : 10%;
+	align-items: center; 
+	justify-content: center;
+}
+.cluster-img-div .cluster-img-wrap .cluster-img{
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	vertical-align: middle;
+}
+
+.cluster-img-div::after{
+	background: linear-gradient(45deg,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 51%,rgba(255,255,255,0) 100%);
+    box-shadow: -2px 2px 2px 0 rgba(178,178,178,.4);
+    content: "";
+    height: 15px; width: 15px;
+    left: 38px;
+    top: 76px;
+    position: absolute;
+    transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* amap modal  */
+.modal-backdrop.show{
+	opacity : 0 !important;
+}
+.modal-img-wrap{
+	/* height: 200px;
+	width: 200px !important; */
+	padding: 0 5px !important;
+}
+.modal-img-wrap .modal-img{
+	object-fit: contain;
+	max-height: 230px;
+	max-width: 230px;
+}
+.modal-img-wrap .modal-date{
+	margin-bottom: 1rem;
+	text-align: left;
 }

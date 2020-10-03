@@ -31,4 +31,8 @@
 		update tb_pics set taken_dt = #{taken_dt} where fl_nm = #{fl_nm}
 	</update>
 	
+	<select id="selectHasGps" resultType="org.zerock.domain.PicsVO">
+		select * from tb_pics where gps_la is not null and gps_lo is not null order by taken_dt DESC
+	</select>
+	
 </mapper>

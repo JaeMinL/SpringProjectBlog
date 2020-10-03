@@ -19,4 +19,6 @@ public interface PicsMapper{
 	
 	public void updateDate(PicsVO pics);
 	
+	public List<PicsVO> selectHasGps();
+	
 }

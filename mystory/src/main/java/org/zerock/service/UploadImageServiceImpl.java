@@ -102,7 +102,7 @@ public class UploadImageServiceImpl implements UploadImageService{
        
             ExifSubIFDDirectory e = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             
-            if (e != null){
+            if (e != null && e.getDateOriginal() != null){
             	//set taken_dt
 	            taken_dt = e.getDateOriginal();
 	            Calendar cal = Calendar.getInstance();  

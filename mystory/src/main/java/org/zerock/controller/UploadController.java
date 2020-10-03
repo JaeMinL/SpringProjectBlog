@@ -74,11 +74,9 @@ public class UploadController {
 				//make folder
 				String uploadPath = getFolder(tmp);
 				log.info("upload file to "+ uploadPath + "/.........");
-				
 				//convert type to JPEG
 				saveFile = uploadImageService.toJpeg(multipartFile, uploadPath, tmp);
 				log.info("Type to JPEG......");
-			
 				//save image to the folder
 				multipartFile.transferTo(saveFile);
 				
@@ -124,9 +122,22 @@ public class UploadController {
 		
 		try {
 			Metadata metadata = ImageMetadataReader.readMetadata(saveFile);
+//			for (Directory directory : metadata.getDirectories()) {
+//			    for (Tag tag : directory.getTags()) {
+//			        System.out.format("[%s] - %s = %s",
+//			            directory.getName(), tag.getTagName(), tag.getDescription());
+//			    }
+//			    if (directory.hasErrors()) {
+//			        for (String error : directory.getErrors()) {
+//			            System.err.format("ERROR: %s", error);
+//			        }
+//			    }
+//			}
+//
 			
 			ExifSubIFDDirectory e = null;
-			if( (e = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class)) != null){
+			if( (e = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class)) != null
+					&& e.getDateOriginal() != null){
 				uploadPath = getSavePath(e.getDateOriginal());
 			}
 			else { //maybe screenshot
@@ -152,7 +163,6 @@ public class UploadController {
 	private String getSavePath(Date date) {
 		Calendar cal = new GregorianCalendar();
         cal.setTime(date);
-        
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH)+1;
 		

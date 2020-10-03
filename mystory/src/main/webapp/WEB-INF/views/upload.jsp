@@ -4,12 +4,13 @@
 
 <%@ include file="/WEB-INF/includes/header.jsp"%>
 <%@ include file="/WEB-INF/includes/nav.jsp"%>
-
-				<div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100">
+	
+	<!-- <div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100"> -->
+				<div class="col-md-12 col-lg-6 text-left text-lg-right">
 					<div class="menus" class="menus" style="font-size:20pt">
 						<a href="#" >(All)</a>
-						<a href="/" >Album</a>
-						<a href="#" >AMap</a>
+						<a href="/">Album</a>
+						<a href="/amap" >AMap</a>
 						<a href="/upload" class="active">+</a>
 	            	</div>
 				</div>
@@ -103,7 +104,7 @@
 			   								date = year + "-" + fillZero(month) +"-"+ fillZero(tk_dt.getDate());
 			   								
 			   								str += "<li> <div>";
-			   								str += "<img class=img_thumbnail src='" + path + "' </img>  :  ";
+			   								str += "<div class='img_thumbnail_wrap' ><img class='img_thumbnail' src='" + path + "' </img> </div> :  ";
 			   								str += "<div name='calendarDiv'>" + "<input type='date' name='chosenDate' value='" + date + "'/>";
 			   								str += "<button type='button' id='updateBtn'>Update</button>";
 			   								str += "</div> </li>";
@@ -112,7 +113,7 @@
 			   								var path = "/pictures/etc/s_" + result[i].fl_nm;
 			   								
 			   								str += "<li> <div>" ;
-			   								str += "<img class=img_thumbnail src='" + path + "' </img>  :  ";
+			   								str += "<div class='img_thumbnail_wrap' ><img class=img_thumbnail src='" + path + "' </img> </div> :  ";
 			   								str += "<div name='calendarDiv'>"+"<input type='date' name='chosenDate' />";
 			   								str += "<button type='button' id='updateBtn'>Update</button>";
 			   								str += "</div> </li>";
@@ -133,43 +134,16 @@
 			   								//console.log(newDate.getFullYear +"-"+ newDate.getMonth() + " : "+ imgPath);
 			   					   			$.ajax({
 			   					   				url: '/updateAction',
-			   					   					processData: true,
-			   					   					dataType: 'text',
-			   					   					data: {newTakenDt : newDate, thumbnailPath : imgPath},
-			   					   					type: 'POST',
-			   					   					success: function(result){
-			   					   						alert(result);
-			   					   						//console.log(updateData);
-			   					   					}
+		   					   					processData: true,
+		   					   					dataType: 'text',
+		   					   					data: {newTakenDt : newDate, thumbnailPath : imgPath},
+		   					   					type: 'POST',
+		   					   					success: function(result){
+		   					   						alert(result);
+		   					   						//console.log(updateData);
+		   					   					}
 			   					   			});  //$.ajax
 			   				   			});
-			   							
-			   							/* var isRun = false;
-			   							$(#uploadResult-wrap).on("click", "#updateBtn", function() {
-			   								if(isRun == true) return;
-			   								var newDate = $(this).prev().children().val();
-			   								var imgPath =  $(this).parent().children("img").attr("src");
-			   								if(!newDate){
-			   									alert("날짜를 선택해주세요.");
-			   									return false;
-			   								}
-			   								var updateData = {"newDate" : newDate, "imgPath" : imgPath};
-			   								
-			   								//alert( $(this).parent().children("img").attr("src") );
-			   								//console.log(newDate.getFullYear +"-"+ newDate.getMonth() + " : "+ imgPath);
-			   					   			$.ajax({
-			   					   				url: '/updateAction',
-			   					   					processData: true,
-			   					   					dataType: 'text',
-			   					   					data: {newTakenDt : newDate, filePath : imgPath},
-			   					   					type: 'POST',
-			   					   					success: function(result){
-			   					   						alert("Updated");
-			   					   						isRun = true;
-			   					   						console.log(updateData);
-			   					   					}
-			   					   			});  //$.ajax
-			   				   			}); */
 			   			
 			   						}
 			   					}

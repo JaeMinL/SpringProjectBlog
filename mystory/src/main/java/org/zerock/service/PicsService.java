@@ -20,4 +20,6 @@ public interface PicsService{
 
 	public PicsVO get(String fl_nm);
 	
+	public List<PicsVO> getGpsInfo();
+	
 }

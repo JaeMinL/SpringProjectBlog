@@ -64,4 +64,9 @@ public class PicsServiceImpl implements PicsService{
 		log.info("updateDate .......");
 		mapper.updateDate(pic);
 	}
+	
+	public List<PicsVO> getGpsInfo(){
+		log.info("getGpsInfo .......");
+		return mapper.selectHasGps();
+	}
 }

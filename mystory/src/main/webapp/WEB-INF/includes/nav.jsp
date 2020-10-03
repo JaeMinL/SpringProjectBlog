@@ -40,7 +40,9 @@
 
 		<div class="container">
 			<div class="row mb-5 align-items-center">
-				<div class="col-md-12 col-lg-6 mb-4 mb-lg-0" data-aos="fade-up">
+				<!-- <div class="col-md-12 col-lg-6 mb-4 mb-lg-0" data-aos="fade-up"> -->
+				<div class="col-md-12 col-lg-6 mb-4 mb-lg-0" >
 					<h3>Hey, It is Jammm's Life Log</h3>
 					<p class="mb-0">Unconstrained Traveller &amp; Professional Developer</p>
 				</div>
+	

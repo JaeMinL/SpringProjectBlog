@@ -57,7 +57,7 @@ public class HomeController {
 	@RequestMapping(value="/daily" , method = RequestMethod.GET)
 	public String daily(String date, Model model) {
 		log.info("daily........");
-		System.out.println(date);
+//		System.out.println(date);
 		
 		SimpleDateFormat fmt = new SimpleDateFormat("yyMMdd");
 		Date taken_dt;
@@ -74,7 +74,7 @@ public class HomeController {
 //			pics_list.remove(pics);
 			
 			model.addAttribute("list", pics_list);
-			System.out.println(pics_list);
+//			System.out.println(pics_list);
 			model.addAttribute("mainPic", thumbnail);
 			
 		} catch (ParseException e) {
